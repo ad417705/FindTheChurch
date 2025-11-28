@@ -1,6 +1,15 @@
 Design Document:
 # Find the Church - Design Document
 
+## Document Version Control
+
+| Version | Date | Updated By | Changes |
+|---------|------|------------|---------|
+| 1.0 | 2024-11-28 | Initial Author | Initial design document created |
+| 1.1 | 2024-11-28 | Initial Author | Updated mission statement, added AWS/Docker infrastructure |
+
+---
+
 ## 1. Project Overview
 
 **Mission**: Remove every barrier between people and their church community. When someone says "I can't find a church near me," we make that excuse impossible. We connect seekers to local congregations, making church discovery effortless and accessible.
@@ -17,16 +26,29 @@ Design Document:
 - **Maps**: Mapbox GL JS or Google Maps API
 - **State Management**: React Context/Zustand (for simple state)
 
-### Backend
+### Backend & Infrastructure
 - **Framework**: Next.js API Routes (serverless functions)
-- **Database**: PostgreSQL via Supabase
-- **Authentication**: Supabase Auth
-- **File Storage**: Supabase Storage (for church images)
+- **Database**: PostgreSQL via AWS RDS
+- **Authentication**: AWS Cognito (or Supabase Auth initially)
+- **File Storage**: AWS S3 (for church images)
+- **Containerization**: Docker
+- **Container Orchestration**: AWS ECS (Elastic Container Service) or EKS (Kubernetes)
+- **API Gateway**: AWS API Gateway (optional for advanced routing)
+- **CDN**: AWS CloudFront
+- **Monitoring**: AWS CloudWatch
+
+### DevOps & Deployment
+- **CI/CD**: GitHub Actions → AWS ECR (Elastic Container Registry) → ECS
+- **Infrastructure as Code**: AWS CDK or Terraform (optional)
+- **Environment Management**: Docker Compose (local), AWS ECS (production)
 
 ### Why This Stack?
 - Next.js provides SSR/SSG for SEO (important for church discovery)
-- Supabase offers real-time subscriptions, auth, and PostGIS for geospatial queries
-- All components integrate seamlessly and scale well
+- Docker ensures consistent environments across development and production
+- AWS offers enterprise-grade scalability and a complete ecosystem
+- Learning AWS, Docker, and containers provides industry-standard DevOps skills
+- PostgreSQL on RDS with PostGIS extension for geospatial queries
+- All components integrate well and provide production-ready infrastructure
 
 ## 3. Core Features (MVP)
 
@@ -176,39 +198,62 @@ Instead of ratings/reviews, focus on **factual, objective information**:
 
 ## 8. Development Roadmap
 
-### Week 1-2: Setup & Foundation
+### Week 1-2: Local Development Setup
 - Initialize Next.js 14+ project with App Router
-- Set up Supabase project and configure database
-- Create initial church schema
+- Create Dockerfile for Next.js application
+- Set up Docker Compose for local development (Next.js + PostgreSQL)
+- Configure PostgreSQL database with PostGIS extension
 - Set up Google Places API credentials
-- Configure environment variables and deployment settings
+- Configure environment variables
+- Test containerized local environment
 
-### Week 3-4: Data Layer & API Integration
+### Week 3-4: AWS Infrastructure Setup
+- Create AWS account and configure IAM roles
+- Set up AWS RDS PostgreSQL instance
+- Configure AWS S3 bucket for image storage
+- Set up AWS ECR (Elastic Container Registry) for Docker images
+- Create initial ECS cluster and task definitions
+- Configure AWS CloudWatch for logging
+- Set up staging and production environments
+
+### Week 5-6: Data Layer & API Integration
 - Build API route to fetch churches from Google Places API
-- Create caching strategy to store results in Supabase
+- Create caching strategy to store results in RDS
 - Implement geolocation functionality
 - Build church search endpoints (by location, city, state)
 - Add pagination and filtering logic
+- Containerize API services
 
-### Week 5-6: Frontend & Map Integration
+### Week 7-8: Frontend & Map Integration
 - Build homepage with map component (Mapbox or Google Maps)
 - Create church list view with cards
 - Implement church detail pages
 - Add search and filter UI
 - Make design responsive for mobile
+- Test in Docker container locally
 
-### Week 7-8: Polish & Launch MVP
+### Week 9-10: CI/CD & Deployment
+- Set up GitHub Actions for automated builds
+- Configure pipeline: Build → Push to ECR → Deploy to ECS
+- Set up AWS CloudFront for CDN
+- Configure custom domain and SSL certificates
 - Add loading states and error handling
 - Optimize for SEO (metadata, sitemap)
-- Test across devices and browsers
-- Deploy to Vercel
-- Set up analytics and monitoring
+- Deploy MVP to production
+
+### Week 11-12: Monitoring & Polish
+- Set up AWS CloudWatch dashboards
+- Configure alerts for errors and performance issues
+- Load testing with Docker containers
+- Final bug fixes and optimizations
+- Documentation for deployment process
 
 ### Post-MVP: Phase 2 Features
-- Add Supabase Auth for user accounts
+- Add AWS Cognito for user authentication
 - Build favorites and check-in features
 - Create user profile pages
 - Implement church claim system (Phase 3)
+- Consider AWS Lambda for background jobs
 
 ## 9. Next.js Development Focus Areas
 
@@ -220,7 +265,34 @@ Key Next.js concepts essential for this project:
 4. **API Routes** - Building endpoints in `app/api/`
 5. **Metadata & SEO** - Dynamic metadata for church pages
 
-## 10. Open Questions to Decide
+## 10. AWS & Docker Learning Focus Areas
+
+Key AWS and containerization concepts for this project:
+
+### Docker Fundamentals
+1. **Dockerfile creation** - Building optimized images for Next.js
+2. **Docker Compose** - Managing multi-container local development
+3. **Container networking** - Connecting services together
+4. **Volume management** - Persisting data and managing file uploads
+5. **Multi-stage builds** - Optimizing image size and security
+
+### AWS Core Services
+1. **ECS (Elastic Container Service)** - Running and managing Docker containers
+2. **ECR (Elastic Container Registry)** - Storing Docker images
+3. **RDS (Relational Database Service)** - Managed PostgreSQL database
+4. **S3 (Simple Storage Service)** - Object storage for images and static assets
+5. **CloudFront** - CDN for fast global content delivery
+6. **CloudWatch** - Logging, monitoring, and alerts
+7. **IAM (Identity and Access Management)** - Security and permissions
+8. **VPC (Virtual Private Cloud)** - Network isolation and security
+
+### CI/CD Pipeline
+1. **GitHub Actions** - Automated testing and builds
+2. **AWS ECR push** - Automated image deployment
+3. **ECS deployment** - Zero-downtime rolling updates
+4. **Environment management** - Staging vs production configurations
+
+## 11. Open Questions to Decide
 
 ### Church Data Strategy
 
