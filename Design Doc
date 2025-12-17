@@ -335,9 +335,3 @@ Key AWS and containerization concepts for this project:
 5. Should users be able to suggest edits to church information?
 
 ---
-
-**Next Steps**: 
-1. Answer the open questions above
-2. Set up your development environment
-3. Create Supabase project and database
-4. Start with the homepage and search functionality
