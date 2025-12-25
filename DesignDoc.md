@@ -5,8 +5,8 @@ Design Document:
 
 | Version | Date | Updated By | Changes |
 |---------|------|------------|---------|
-| 1.0 | 2024-11-28 | Initial Author | Initial design document created |
-| 1.1 | 2024-11-28 | Initial Author | Updated mission statement, added AWS/Docker infrastructure |
+| 1.0 | 2024-11-28 | Andrew Dana | Initial design document created |
+| 1.1 | 2024-11-28 | Andrew Dana | Updated mission statement, added AWS/Docker infrastructure |
 
 ---
 
